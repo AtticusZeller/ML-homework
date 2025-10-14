@@ -130,19 +130,19 @@ def preprocess_data(
     )
 
     print("\n" + "=" * 80)
-    print("数据预处理")
+    print("DATA PREPROCESSING")
     print("=" * 80)
-    print(f"\n训练集大小: {X_train.shape[0]} samples")
-    print(f"测试集大小: {X_test.shape[0]} samples")
+    print(f"\nTraining set size: {X_train.shape[0]} samples")
+    print(f"Test set size: {X_test.shape[0]} samples")
 
     # Feature standardization (mean=0, std=1)
     scaler: StandardScaler = StandardScaler()
     X_train_scaled: np.ndarray = scaler.fit_transform(X_train)
     X_test_scaled: np.ndarray = scaler.transform(X_test)
 
-    print("\n特征标准化完毕.")
-    print("训练集 - 平均值:", np.mean(X_train_scaled, axis=0).round(4))
-    print("训练集 - 标准差:", np.std(X_train_scaled, axis=0).round(4))
+    print("\nFeature Standardization completed.")
+    print("Training set - Mean:", np.mean(X_train_scaled, axis=0).round(4))
+    print("Training set - Std:", np.std(X_train_scaled, axis=0).round(4))
 
     return X_train_scaled, X_test_scaled, y_train, y_test, scaler
 
