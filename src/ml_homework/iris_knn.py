@@ -439,12 +439,13 @@ def print_evaluation_results(metrics: dict[str, Any], target_names: list[str]) -
     print("\nConfusion Matrix:")
     print(f"{'':>15}", end="")
     for name in target_names:
-        print(f"{name:<15}", end="")
-    print()
-    for i, name in enumerate(target_names):
         print(f"{name:>15}", end="")
+    print()
+    print("-" * 56)
+    for i, name in enumerate(target_names):
+        print(f"{name:<15}", end=" ")
         for j in range(len(target_names)):
-            print(f"{metrics['confusion_matrix'][i, j]:<15}", end="")
+            print(f"{metrics['confusion_matrix'][i, j]:>12}", end="")
         print()
 
 
@@ -488,18 +489,18 @@ def tune_k_value(
     The k value yielding the highest test accuracy is selected as optimal.
     """
     print("\n" + "=" * 80)
-    print(f"HYPERPARAMETER TUNING (Distance: {distance_type})")
+    print(f"超参数调优 (距离类型: {distance_type})")
     print("=" * 80)
 
     accuracies: list[float] = []
 
     for k in k_values:
-        knn: MyKNN = MyKNN(k=k, distance_type=distance_type)
+        knn = MyKNN(k=k, distance_type=distance_type)
         knn.fit(X_train, y_train)
-        y_pred: np.ndarray = knn.predict(X_test)
+        y_pred = knn.predict(X_test)
         accuracy: float = np.mean(y_test == y_pred)
         accuracies.append(accuracy)
-        print(f"K={k:2d}: Accuracy = {accuracy:.4f} ({accuracy*100:.2f}%)")
+        print(f"{k=:2d}: {accuracy=:.4f} ({accuracy*100:.2f}%)")
 
     # Find best k value
     best_idx = np.argmax(accuracies)
@@ -507,7 +508,7 @@ def tune_k_value(
     best_accuracy = accuracies[best_idx]
 
     print(
-        f"\nBest K value: {best_k} with accuracy {best_accuracy:.4f} "
+        f"\n最好的K值: {best_k} 准确率为 {best_accuracy:.4f} "
         f"({best_accuracy*100:.2f}%)"
     )
 
@@ -882,7 +883,7 @@ def run_task1() -> (
     X_train, X_test, y_train, y_test, scaler = preprocess_data(X, y)
 
     # Create exploratory visualizations
-    visualize_data_exploration(X, y, feature_names, target_names)
+    # visualize_data_exploration(X, y, feature_names, target_names)
 
     print("\n" + "=" * 80)
     print("TASK 1 COMPLETED SUCCESSFULLY")
