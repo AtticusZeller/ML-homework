@@ -558,7 +558,7 @@ def visualize_data_exploration(
     fig, axes = plt.subplots(2, 2, figsize=(14, 10))
     fig.suptitle("Feature Distribution by Species", fontsize=16, fontweight="bold")
 
-    colors: list[str] = ["#FF6B6B", "#4ECDC4", "#45B7D1"]
+    colors: list[str] = ["#FF6B6B", "#4ECDC4", "#4D08EC"]
 
     for idx, feature in enumerate(feature_names):
         ax = axes[idx // 2, idx % 2]
@@ -780,12 +780,12 @@ def visualize_decision_boundary(
         Z,
         alpha=0.8,
         levels=2,
-        colors=["#FF6B6B", "#4ECDC4", "#45B7D1"],
+        colors=["#FF6B6B", "#4ECDC4", "#5A09F1"],
         linewidths=2,
     )
 
     # Plot training and test samples
-    scatter_colors: list[str] = ["#FF6B6B", "#4ECDC4", "#45B7D1"]
+    scatter_colors: list[str] = ["#FF6B6B", "#4ECDC4", "#5A09F1"]
     for i, species in enumerate(target_names):
         # Training samples
         train_mask: np.ndarray = y_train == i
@@ -883,7 +883,7 @@ def run_task1() -> (
     X_train, X_test, y_train, y_test, scaler = preprocess_data(X, y)
 
     # Create exploratory visualizations
-    # visualize_data_exploration(X, y, feature_names, target_names)
+    visualize_data_exploration(X, y, feature_names, target_names)
 
     print("\n" + "=" * 80)
     print("TASK 1 COMPLETED SUCCESSFULLY")
