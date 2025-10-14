@@ -5,19 +5,18 @@ from typing import Any
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import seaborn as sns
-from numpy.typing import NDArray
-from sklearn.datasets import load_iris
-from sklearn.metrics import (
+import seaborn as sns  # type:ignore
+from sklearn.datasets import load_iris  # type:ignore
+from sklearn.metrics import (  # type:ignore
     accuracy_score,
     confusion_matrix,
     f1_score,
     precision_score,
     recall_score,
 )
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.utils import Bunch
+from sklearn.model_selection import train_test_split  # type:ignore
+from sklearn.preprocessing import StandardScaler  # type:ignore
+from sklearn.utils import Bunch  # type:ignore
 
 # Set random seed for reproducibility
 np.random.seed(42)
@@ -32,17 +31,15 @@ plt.rcParams["axes.unicode_minus"] = False
 # ============================================================================
 
 
-def load_and_explore_data() -> (
-    tuple[NDArray[np.float64], NDArray[np.float64], list[str], list[str]]
-):
+def load_and_explore_data() -> tuple[np.ndarray, np.ndarray, list[str], list[str]]:
     """
     Load the Iris dataset and perform exploratory data analysis.
 
     Returns
     -------
-    X : NDArray[np.float64] of shape (150, 4)
+    X : np.ndarray of shape (150, 4)
         Feature matrix containing 150 samples with 4 features each.
-    y : NDArray[np.float64] of shape (150,)
+    y : np.ndarray of shape (150,)
         Target labels for the 150 samples (0, 1, or 2).
     feature_names : list of str
         Names of the 4 features (sepal length, sepal width, petal length, petal width).
@@ -55,9 +52,9 @@ def load_and_explore_data() -> (
     statistical information including shape, missing values, and class distribution.
     """
     # Load Iris dataset from sklearn
-    iris: Bunch = load_iris()  # type: ignore
-    X: NDArray[np.float64] = iris.data
-    y: NDArray[np.float64] = iris.target
+    iris: Bunch = load_iris()  # type:ignore
+    X: np.ndarray = iris.data
+    y: np.ndarray = iris.target
     feature_names: list[str] = iris.feature_names
     target_names: list[str] = iris.target_names.tolist()
 
@@ -92,19 +89,16 @@ def load_and_explore_data() -> (
 
 
 def preprocess_data(
-    X: NDArray[np.float64],
-    y: NDArray[np.float64],
-    test_size: float = 0.3,
-    random_state: int = 42,
-) -> tuple[NDArray, NDArray, NDArray, NDArray, StandardScaler]:
+    X: np.ndarray, y: np.ndarray, test_size: float = 0.3, random_state: int = 42
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, StandardScaler]:
     """
     Preprocess the data with standardization and train-test split.
 
     Parameters
     ----------
-    X : NDArray[np.float64] of shape (n_samples, n_features)
+    X : np.ndarray of shape (n_samples, n_features)
         Feature matrix to be split and standardized.
-    y : NDArray[np.float64] of shape (n_samples,)
+    y : np.ndarray of shape (n_samples,)
         Target labels corresponding to X.
     test_size : float, default=0.3
         Proportion of the dataset to include in the test split.
@@ -113,13 +107,13 @@ def preprocess_data(
 
     Returns
     -------
-    X_train_scaled : NDArray of shape (n_train_samples, n_features)
+    X_train_scaled : np.ndarray of shape (n_train_samples, n_features)
         Standardized training feature matrix.
-    X_test_scaled : NDArray of shape (n_test_samples, n_features)
+    X_test_scaled : np.ndarray of shape (n_test_samples, n_features)
         Standardized test feature matrix.
-    y_train : NDArray of shape (n_train_samples,)
+    y_train : np.ndarray of shape (n_train_samples,)
         Training labels.
-    y_test : NDArray of shape (n_test_samples,)
+    y_test : np.ndarray of shape (n_test_samples,)
         Test labels.
     scaler : StandardScaler
         Fitted StandardScaler object for potential future transformations.
@@ -143,8 +137,8 @@ def preprocess_data(
 
     # Feature standardization (mean=0, std=1)
     scaler: StandardScaler = StandardScaler()
-    X_train_scaled: NDArray = scaler.fit_transform(X_train)
-    X_test_scaled: NDArray = scaler.transform(X_test)
+    X_train_scaled: np.ndarray = scaler.fit_transform(X_train)
+    X_test_scaled: np.ndarray = scaler.transform(X_test)
 
     print("\n特征标准化完毕.")
     print("训练集 - 平均值:", np.mean(X_train_scaled, axis=0).round(4))
@@ -176,9 +170,9 @@ class MyKNN:
 
     Attributes
     ----------
-    X_train : NDArray of shape (n_samples, n_features)
+    X_train : np.ndarray of shape (n_samples, n_features)
         Training feature matrix stored during fit().
-    y_train : NDArray of shape (n_samples,)
+    y_train : np.ndarray of shape (n_samples,)
         Training labels stored during fit().
 
     Examples
@@ -201,12 +195,10 @@ class MyKNN:
         """
         self.k: int = k
         self.distance_type: str = distance_type
-        self.X_train: NDArray[np.float64] | None = None
-        self.y_train: NDArray[np.float64] | None = None
+        self.X_train: np.ndarray | None = None
+        self.y_train: np.ndarray | None = None
 
-    def fit(
-        self, X_train: NDArray[np.float64], y_train: NDArray[np.float64]
-    ) -> "MyKNN":
+    def fit(self, X_train: np.ndarray, y_train: np.ndarray) -> "MyKNN":
         """
         Fit the KNN model by storing the training data.
 
@@ -215,9 +207,9 @@ class MyKNN:
 
         Parameters
         ----------
-        X_train : NDArray[np.float64] of shape (n_samples, n_features)
+        X_train : np.ndarray of shape (n_samples, n_features)
             Training feature matrix.
-        y_train : NDArray[np.float64] of shape (n_samples,)
+        y_train : np.ndarray of shape (n_samples,)
             Training target labels.
 
         Returns
@@ -229,17 +221,15 @@ class MyKNN:
         self.y_train = y_train
         return self
 
-    def calculate_distance(
-        self, x1: NDArray[np.float64], x2: NDArray[np.float64]
-    ) -> float:
+    def calculate_distance(self, x1: np.ndarray, x2: np.ndarray) -> float:
         """
         Calculate distance between two samples based on the selected metric.
 
         Parameters
         ----------
-        x1 : NDArray of shape (n_features,)
+        x1 : np.ndarray of shape (n_features,)
             First sample (feature vector).
-        x2 : NDArray of shape (n_features,)
+        x2 : np.ndarray of shape (n_features,)
             Second sample (feature vector).
 
         Returns
@@ -259,22 +249,22 @@ class MyKNN:
         """
         if self.distance_type == "euclidean":
             # Euclidean distance: sqrt(sum((x1_i - x2_i)^2))
-            return np.sqrt(np.sum((x1 - x2) ** 2))
+            return float(np.sqrt(np.sum((x1 - x2) ** 2)))
         elif self.distance_type == "manhattan":
             # Manhattan distance: sum(|x1_i - x2_i|)
-            return np.sum(np.abs(x1 - x2))
+            return float(np.sum(np.abs(x1 - x2)))
         else:
             raise ValueError(f"Unknown distance type: {self.distance_type}")
 
-    def predict_single(self, x: NDArray[np.float64]) -> int:
+    def predict_single(self, x: np.ndarray) -> int:
         """
                 Predict the class label for a single test sample.
 
                 Parameters
                 ----------
-                x : NDArray of shape (n_features,)
+                x : np.ndarray of shape (n_features,)
                     Single test sample (feature vector).
-        NDArray[np.float64]
+        np.ndarray
                 Returns
                 -------
                 label : int
@@ -314,18 +304,18 @@ class MyKNN:
 
         return most_common[0][0]
 
-    def predict(self, X_test: NDArray) -> NDArray:
+    def predict(self, X_test: np.ndarray) -> np.ndarray:
         """
         Predict class labels for all test samples.
 
         Parameters
         ----------
-        X_test : NDArray of shape (n_test_samples, n_features)
+        X_test : np.ndarray of shape (n_test_samples, n_features)
             Test feature matrix.
 
         Returns
         -------
-        predictions : NDArray of shape (n_test_samples,)
+        predictions : np.ndarray of shape (n_test_samples,)
             Array of predicted labels for each test sample.
         """
         predictions: list[int] = []
@@ -340,15 +330,15 @@ class MyKNN:
 # ============================================================================
 
 
-def calculate_metrics(y_true: NDArray, y_pred: NDArray) -> dict[str, Any]:
+def calculate_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> dict[str, Any]:
     """
     Calculate comprehensive evaluation metrics for classification using sklearn.
 
     Parameters
     ----------
-    y_true : NDArray of shape (n_samples,)
+    y_true : np.ndarray of shape (n_samples,)
         True labels of the samples.
-    y_pred : NDArray of shape (n_samples,)
+    y_pred : np.ndarray of shape (n_samples,)
         Predicted labels from the classifier.
     target_names : list of str
         Names of the classes for reporting purposes.
@@ -359,7 +349,7 @@ def calculate_metrics(y_true: NDArray, y_pred: NDArray) -> dict[str, Any]:
         Dictionary containing the following keys:
         - 'accuracy' : float
             Overall accuracy of predictions.
-        - 'confusion_matrix' : np.ndarray of shape (n_classes, n_classes)
+        - 'confusion_matrix' : np.np.ndarray of shape (n_classes, n_classes)
             Confusion matrix where rows are true labels and columns are predicted.
         - 'precision' : list of float
             Precision score for each class.
@@ -459,10 +449,10 @@ def print_evaluation_results(metrics: dict[str, Any], target_names: list[str]) -
 
 
 def tune_k_value(
-    X_train: NDArray,
-    X_test: NDArray,
-    y_train: NDArray,
-    y_test: NDArray,
+    X_train: np.ndarray,
+    X_test: np.ndarray,
+    y_train: np.ndarray,
+    y_test: np.ndarray,
     k_values: list[int],
     distance_type: str = "euclidean",
 ) -> tuple[int, list[float]]:
@@ -471,13 +461,13 @@ def tune_k_value(
 
     Parameters
     ----------
-    X_train : NDArray of shape (n_train_samples, n_features)
+    X_train : np.ndarray of shape (n_train_samples, n_features)
         Training feature matrix.
-    X_test : NDArray of shape (n_test_samples, n_features)
+    X_test : np.ndarray of shape (n_test_samples, n_features)
         Test feature matrix.
-    y_train : NDArray of shape (n_train_samples,)
+    y_train : np.ndarray of shape (n_train_samples,)
         Training labels.
-    y_test : NDArray of shape (n_test_samples,)
+    y_test : np.ndarray of shape (n_test_samples,)
         Test labels.
     k_values : list of int
         List of k values to test during grid search.
@@ -506,7 +496,7 @@ def tune_k_value(
     for k in k_values:
         knn: MyKNN = MyKNN(k=k, distance_type=distance_type)
         knn.fit(X_train, y_train)
-        y_pred: NDArray = knn.predict(X_test)
+        y_pred: np.ndarray = knn.predict(X_test)
         accuracy: float = np.mean(y_test == y_pred)
         accuracies.append(accuracy)
         print(f"K={k:2d}: Accuracy = {accuracy:.4f} ({accuracy*100:.2f}%)")
@@ -530,16 +520,16 @@ def tune_k_value(
 
 
 def visualize_data_exploration(
-    X: NDArray, y: NDArray, feature_names: list[str], target_names: list[str]
+    X: np.ndarray, y: np.ndarray, feature_names: list[str], target_names: list[str]
 ) -> None:
     """
     Create comprehensive exploratory data visualizations.
 
     Parameters
     ----------
-    X : NDArray of shape (n_samples, n_features)
+    X : np.ndarray of shape (n_samples, n_features)
         Feature matrix of the dataset.
-    y : NDArray of shape (n_samples,)
+    y : np.ndarray of shape (n_samples,)
         Target labels of the dataset.
     feature_names : list of str
         Names of the features.
@@ -711,10 +701,10 @@ def visualize_model_results(
 
 
 def visualize_decision_boundary(
-    X_train: NDArray,
-    X_test: NDArray,
-    y_train: NDArray,
-    y_test: NDArray,
+    X_train: np.ndarray,
+    X_test: np.ndarray,
+    y_train: np.ndarray,
+    y_test: np.ndarray,
     knn_model: MyKNN,
     feature_names: list[str],
     target_names: list[str],
@@ -725,13 +715,13 @@ def visualize_decision_boundary(
 
     Parameters
     ----------
-    X_train : NDArray of shape (n_train_samples, n_features)
+    X_train : np.ndarray of shape (n_train_samples, n_features)
         Training feature matrix.
-    X_test : NDArray of shape (n_test_samples, n_features)
+    X_test : np.ndarray of shape (n_test_samples, n_features)
         Test feature matrix.
-    y_train : NDArray of shape (n_train_samples,)
+    y_train : np.ndarray of shape (n_train_samples,)
         Training labels.
-    y_test : NDArray of shape (n_test_samples,)
+    y_test : np.ndarray of shape (n_test_samples,)
         Test labels.
     knn_model : MyKNN
         Trained KNN model instance.
@@ -758,8 +748,8 @@ def visualize_decision_boundary(
     The visualization is saved as 'decision_boundary.png'.
     """
     # Extract two features for 2D visualization
-    X_train_2d: NDArray = X_train[:, feature_indices]
-    X_test_2d: NDArray = X_test[:, feature_indices]
+    X_train_2d: np.ndarray = X_train[:, feature_indices]
+    X_test_2d: np.ndarray = X_test[:, feature_indices]
 
     # Create a temporary KNN model with 2D data
     knn_2d: MyKNN = MyKNN(k=knn_model.k, distance_type=knn_model.distance_type)
@@ -773,8 +763,8 @@ def visualize_decision_boundary(
     xx, yy = np.meshgrid(np.linspace(x_min, x_max, 200), np.linspace(y_min, y_max, 200))
 
     # Predict for each point in the mesh grid
-    grid_points: NDArray = np.c_[xx.ravel(), yy.ravel()]
-    Z: NDArray = knn_2d.predict(grid_points)
+    grid_points: np.ndarray = np.c_[xx.ravel(), yy.ravel()]
+    Z: np.ndarray = knn_2d.predict(grid_points)
     Z = Z.reshape(xx.shape)
 
     # Plot decision boundary
@@ -797,7 +787,7 @@ def visualize_decision_boundary(
     scatter_colors: list[str] = ["#FF6B6B", "#4ECDC4", "#45B7D1"]
     for i, species in enumerate(target_names):
         # Training samples
-        train_mask: NDArray = y_train == i
+        train_mask: np.ndarray = y_train == i
         ax.scatter(
             X_train_2d[train_mask, 0],
             X_train_2d[train_mask, 1],
@@ -810,7 +800,7 @@ def visualize_decision_boundary(
         )
 
         # Test samples (with different marker)
-        test_mask: NDArray = y_test == i
+        test_mask: np.ndarray = y_test == i
         ax.scatter(
             X_test_2d[test_mask, 0],
             X_test_2d[test_mask, 1],
@@ -842,20 +832,28 @@ def visualize_decision_boundary(
 
 
 def run_task1() -> (
-    tuple[NDArray, NDArray, NDArray, NDArray, list[str], list[str], StandardScaler]
+    tuple[
+        np.ndarray,
+        np.ndarray,
+        np.ndarray,
+        np.ndarray,
+        list[str],
+        list[str],
+        StandardScaler,
+    ]
 ):
     """
     Execute Task 1: Data loading and preprocessing.
 
     Returns
     -------
-    X_train : NDArray of shape (n_train_samples, n_features)
+    X_train : np.ndarray of shape (n_train_samples, n_features)
         Standardized training feature matrix.
-    X_test : NDArray of shape (n_test_samples, n_features)
+    X_test : np.ndarray of shape (n_test_samples, n_features)
         Standardized test feature matrix.
-    y_train : NDArray of shape (n_train_samples,)
+    y_train : np.ndarray of shape (n_train_samples,)
         Training labels.
-    y_test : NDArray of shape (n_test_samples,)
+    y_test : np.ndarray of shape (n_test_samples,)
         Test labels.
     feature_names : list of str
         Names of features.
@@ -894,25 +892,25 @@ def run_task1() -> (
 
 
 def run_task2(
-    X_train: NDArray,
-    X_test: NDArray,
-    y_train: NDArray,
-    y_test: NDArray,
+    X_train: np.ndarray,
+    X_test: np.ndarray,
+    y_train: np.ndarray,
+    y_test: np.ndarray,
     k: int = 5,
     distance_type: str = "euclidean",
-) -> tuple[MyKNN, NDArray]:
+) -> tuple[MyKNN, np.ndarray]:
     """
     Execute Task 2: KNN algorithm implementation and prediction.
 
     Parameters
     ----------
-    X_train : NDArray of shape (n_train_samples, n_features)
+    X_train : np.ndarray of shape (n_train_samples, n_features)
         Training feature matrix.
-    X_test : NDArray of shape (n_test_samples, n_features)
+    X_test : np.ndarray of shape (n_test_samples, n_features)
         Test feature matrix.
-    y_train : NDArray of shape (n_train_samples,)
+    y_train : np.ndarray of shape (n_train_samples,)
         Training labels.
-    y_test : NDArray of shape (n_test_samples,)
+    y_test : np.ndarray of shape (n_test_samples,)
         Test labels.
     k : int, default=5
         Number of nearest neighbors.
@@ -923,7 +921,7 @@ def run_task2(
     -------
     knn_model : MyKNN
         Trained KNN model instance.
-    y_pred : NDArray of shape (n_test_samples,)
+    y_pred : np.ndarray of shape (n_test_samples,)
         Predicted labels for test set.
 
     Notes
@@ -947,7 +945,7 @@ def run_task2(
     print("Making predictions on test set...")
 
     # Make predictions
-    y_pred: NDArray = knn_model.predict(X_test)
+    y_pred: np.ndarray = knn_model.predict(X_test)
 
     # Calculate basic accuracy
     accuracy: float = np.mean(y_test == y_pred)
@@ -961,10 +959,10 @@ def run_task2(
 
 
 def run_task3(
-    X_train: NDArray,
-    X_test: NDArray,
-    y_train: NDArray,
-    y_test: NDArray,
+    X_train: np.ndarray,
+    X_test: np.ndarray,
+    y_train: np.ndarray,
+    y_test: np.ndarray,
     target_names: list[str],
     k_values: list[int],
     distance_type: str = "euclidean",
@@ -974,13 +972,13 @@ def run_task3(
 
     Parameters
     ----------
-    X_train : NDArray of shape (n_train_samples, n_features)
+    X_train : np.ndarray of shape (n_train_samples, n_features)
         Training feature matrix.
-    X_test : NDArray of shape (n_test_samples, n_features)
+    X_test : np.ndarray of shape (n_test_samples, n_features)
         Test feature matrix.
-    y_train : NDArray of shape (n_train_samples,)
+    y_train : np.ndarray of shape (n_train_samples,)
         Training labels.
-    y_test : NDArray of shape (n_test_samples,)
+    y_test : np.ndarray of shape (n_test_samples,)
         Test labels.
     target_names : list of str
         Names of classes.
@@ -1022,7 +1020,7 @@ def run_task3(
 
     final_knn: MyKNN = MyKNN(k=best_k, distance_type=distance_type)
     final_knn.fit(X_train, y_train)
-    y_pred: NDArray = final_knn.predict(X_test)
+    y_pred: np.ndarray = final_knn.predict(X_test)
 
     # Calculate comprehensive metrics
     metrics: dict[str, Any] = calculate_metrics(y_test, y_pred)
@@ -1036,10 +1034,10 @@ def run_task3(
 
 
 def run_task4(
-    X_train: NDArray,
-    X_test: NDArray,
-    y_train: NDArray,
-    y_test: NDArray,
+    X_train: np.ndarray,
+    X_test: np.ndarray,
+    y_train: np.ndarray,
+    y_test: np.ndarray,
     feature_names: list[str],
     target_names: list[str],
     best_k: int,
@@ -1053,13 +1051,13 @@ def run_task4(
 
     Parameters
     ----------
-    X_train : NDArray of shape (n_train_samples, n_features)
+    X_train : np.ndarray of shape (n_train_samples, n_features)
         Training feature matrix.
-    X_test : NDArray of shape (n_test_samples, n_features)
+    X_test : np.ndarray of shape (n_test_samples, n_features)
         Test feature matrix.
-    y_train : NDArray of shape (n_train_samples,)
+    y_train : np.ndarray of shape (n_train_samples,)
         Training labels.
-    y_test : NDArray of shape (n_test_samples,)
+    y_test : np.ndarray of shape (n_test_samples,)
         Test labels.
     feature_names : list of str
         Names of features.
@@ -1112,10 +1110,10 @@ def run_task4(
 
 
 def run_bonus(
-    X_train: NDArray,
-    X_test: NDArray,
-    y_train: NDArray,
-    y_test: NDArray,
+    X_train: np.ndarray,
+    X_test: np.ndarray,
+    y_train: np.ndarray,
+    y_test: np.ndarray,
     k_values: list[int],
 ) -> None:
     """
@@ -1123,13 +1121,13 @@ def run_bonus(
 
     Parameters
     ----------
-    X_train : NDArray of shape (n_train_samples, n_features)
+    X_train : np.ndarray of shape (n_train_samples, n_features)
         Training feature matrix.
-    X_test : NDArray of shape (n_test_samples, n_features)
+    X_test : np.ndarray of shape (n_test_samples, n_features)
         Test feature matrix.
-    y_train : NDArray of shape (n_train_samples,)
+    y_train : np.ndarray of shape (n_train_samples,)
         Training labels.
-    y_test : NDArray of shape (n_test_samples,)
+    y_test : np.ndarray of shape (n_test_samples,)
         Test labels.
     k_values : list of int, default=[1, 3, 5, 7, 9, 11, 13, 15]
         List of k values to test.
