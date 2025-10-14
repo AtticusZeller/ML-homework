@@ -70,21 +70,21 @@ def load_and_explore_data() -> (
     print("=" * 80)
 
     # Display basic information
-    print(f"\nDataset Shape: {X.shape}")
-    print(f"Number of samples: {X.shape[0]}")
-    print(f"Number of features: {X.shape[1]}")
-    print(f"Number of classes: {len(target_names)}")
-    print(f"Class names: {target_names}")
+    print(f"\n数据集形状: {X.shape}")
+    print(f"样本数量: {X.shape[0]}")
+    print(f"特征维度: {X.shape[1]}")
+    print(f"类别数量: {len(target_names)}")
+    print(f"类别名称: {target_names}")
 
-    # Check for missing values
-    print(f"\nMissing values: {df.isnull().sum().sum()}")
+    # Check for missing values 检查是否存在缺失值或异常值
+    print(f"\n缺失值: {df.isnull().sum().sum()}")
 
     # Statistical summary
-    print("\nStatistical Summary:")
+    print("\n各项统计学指标总结:")
     print(df.describe())
 
     # Class distribution
-    print("\nClass Distribution:")
+    print("\n类别的分布:")
     for i, name in enumerate(target_names):
         count: int = np.sum(y == i)
         print(f"  {name}: {count} samples")
