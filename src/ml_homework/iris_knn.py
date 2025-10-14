@@ -320,7 +320,7 @@ class MyKNN:
         """
         predictions: list[int] = []
         for x in X_test:
-            pred: int = self.predict_single(x)
+            pred = self.predict_single(x)
             predictions.append(pred)
         return np.array(predictions)
 
